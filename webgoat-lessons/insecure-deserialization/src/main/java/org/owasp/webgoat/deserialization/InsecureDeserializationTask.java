@@ -43,16 +43,13 @@ public class InsecureDeserializationTask extends AssignmentEndpoint {
 
     @PostMapping("/InsecureDeserialization/task")
     @ResponseBody
-    public AttackResult completed(@RequestParam ObjectStreamClass token) throws IOException {
+    public AttackResult completed(@RequestParam String token) throws IOException {
         String b64token;
         long before;
         long after;
         int delay;
-        if(!token.getName().equals(VulnerableTaskHolder.class.getName())){
-            throw new InvalidClassException("Unauthorized deserialization", token.getName());
-        }
 
-        b64token = token.getName().replace('-', '+').replace('_', '/');
+        b64token = token.replace('-', '+').replace('_', '/');
 
 
         try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(Base64.getDecoder().decode(b64token)))) {
